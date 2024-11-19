@@ -1,0 +1,25 @@
+name: Deploy
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Demo VUEJS on VPS
+      uses: appleboy/ssh-action@master
+      with:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+        script: |
+          cd public_html/vuejs/ 
+          git clone git@github.com:YOUR_ACCOUNT/YOUR_GIT.git
+          cd wr505d/search-films
+          git pull
+          npm install
+          npm run build
