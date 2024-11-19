@@ -1,25 +1,31 @@
-name: Deploy
+name: CI for VueJS Project
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Demo VUEJS on VPS
-      uses: appleboy/ssh-action@master
-      with:
-        HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
-        script: |
-          cd public_html/vuejs/ 
-          git clone git@github.com:YOUR_ACCOUNT/YOUR_GIT.git
-          cd wr505d/search-films
-          git pull
-          npm install
-          npm run build
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build project
+        run: npm run build
